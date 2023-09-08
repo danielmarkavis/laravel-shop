@@ -31,6 +31,7 @@ class CartService implements CartInterface
         } else {
             $cart[$sku] = [
                 "name" => $product->name,
+                "id" => $variant->id,
                 "sku" => $variant->sku,
                 "quantity" => 1,
                 "price" => $variant->price,
@@ -56,6 +57,11 @@ class CartService implements CartInterface
         }
 
         session()->put('cart', $cart);
+    }
+
+    public function purge(): void
+    {
+        session()->put('cart', []);
     }
 
     public function totalPrice(): int

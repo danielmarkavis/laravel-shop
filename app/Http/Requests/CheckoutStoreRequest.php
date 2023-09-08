@@ -14,10 +14,10 @@ class CheckoutStoreRequest extends FormRequest
      */
     public function rules(): array
     {
-        $requiredRule = 'required_if:address_id,null|max:255';
+        $requiredRule = 'required|string|max:255';
 
         return [
-            'address_id'       => 'nullable|string|max:255',
+            'address_id'       => 'required|string|max:255',
             'first_name'       => $requiredRule,
             'last_name'        => $requiredRule,
             'phone_number'     => $requiredRule,

@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
+            $table->string('uuid')->unique();
             $table->decimal('subtotal', 6,2);
             $table->decimal('vat', 6,2);
             $table->decimal('total', 6,2);

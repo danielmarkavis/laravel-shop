@@ -15,9 +15,9 @@ return new class extends Migration
             $table->id();
             $table->foreignId('order_id');
             $table->foreign('order_id')->references('id')->on('orders')->onDelete('cascade');
-            $table->foreignId('product_id');
-            $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
-            $table->string('product_quantity');
+            $table->foreignId('variant_id');
+            $table->foreign('variant_id')->references('id')->on('variants')->onDelete('cascade');
+            $table->string('quantity');
             $table->decimal('price', 6,2);
             $table->timestamps();
         });
@@ -30,7 +30,7 @@ return new class extends Migration
     {
         Schema::table('order_products', function (Blueprint $table) {
             $table->dropForeign(['order_id']);
-            $table->dropForeign(['product_id']);
+            $table->dropForeign(['variant_id']);
         });
 
         Schema::dropIfExists('order_products');

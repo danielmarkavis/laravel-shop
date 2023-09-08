@@ -4,13 +4,17 @@ namespace App\Http\Controllers;
 
 use App\Contracts\PaymentServiceInterface;
 use App\Services\CartService;
+use App\Services\OrderService;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 
 class PaymentController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index(CartService $cart, PaymentServiceInterface $payment): \Illuminate\Contracts\View\View|\Illuminate\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\Foundation\Application
+    public function index(CartService $cart): View|\Illuminate\Foundation\Application|Factory|Application
     {
         $products = $cart->get();
         $total = $cart->totalPrice();
@@ -18,16 +22,18 @@ class PaymentController extends Controller
         return view('pages.payment.index', compact('products','total'));
     }
 
-    public function store(CheckoutStoreRequest $request, CartService $cart): View|Application|Factory|\Illuminate\Contracts\Foundation\Application
+    public function store(CartService $cart, PaymentServiceInterface $paymentGateway, OrderService $orderService): View|Application|Factory
     {
+        $status = $paymentGateway->execute();
 
-        $data = $request->validated();
+        $orderComplete = $orderService->getSessionOrder();
 
-        $products = $cart->get();
-        $total = $cart->totalPrice();
+        $cart->purge();
 
-        $validated = $request->validated();
-        return view('pages.payment.index', compact('products','total'));
+        $orderComplete->status = $status;
+        $orderComplete->save();
+
+        return view('pages.payment.show', compact('orderComplete'));
     }
 
 }

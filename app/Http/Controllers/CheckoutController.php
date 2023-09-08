@@ -6,6 +6,7 @@ use App\Http\Requests\CheckoutStoreRequest;
 use App\Models\Address;
 use App\Services\AddressService;
 use App\Services\CartService;
+use App\Services\OrderService;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Foundation\Application;
@@ -25,18 +26,19 @@ class CheckoutController extends Controller
         return view('pages.checkout.index', compact('products','total', 'addresses'));
     }
 
-    public function store(CheckoutStoreRequest $request, AddressService $address, CartService $cart): View|Application|Factory|\Illuminate\Contracts\Foundation\Application
+    public function store(CheckoutStoreRequest $request, CartService $cart, AddressService $address, OrderService $order): \Illuminate\Http\RedirectResponse
     {
         $data = $request->validated();
 
-        dd($data);
+        if ($data['address_id'] === "-1") {
+            $shippingAddress = $address->store($data);
+        } else {
+            $shippingAddress = $address->getById($data['address_id']);
+        }
 
-        $address->store($data);
+        $order->store($cart, $shippingAddress);
 
-        $products = $cart->get();
-        $total = $cart->totalPrice();
-
-        return view('pages.payment.index', compact('products','total'));
+        return redirect()->route('payment.index');
     }
 
 }

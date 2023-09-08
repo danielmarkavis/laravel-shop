@@ -4,15 +4,21 @@ namespace App\Services;
 
 use App\Contracts\AddressInterface;
 use App\Models\Address;
+use Illuminate\Support\Collection;
 
 class AddressService implements AddressInterface
 {
-    public function get(int $user_id)
+    public function getById(int $id): ?Address
     {
-        return Address::where('user_id', $user_id);
+        return Address::where('id', $id)->first();
     }
 
-    public function store(array $data): void
+    public function getByUserId(int $user_id): Collection
+    {
+        return Address::where('user_id', $user_id)->get();
+    }
+
+    public function store(array $data): Address
     {
         $address = new Address();
         $address->user_id = auth()->user()->id;
@@ -26,5 +32,7 @@ class AddressService implements AddressInterface
         $address->postcode = $data['postcode'];
         $address->country = $data['country'];
         $address->save();
+
+        return $address;
     }
 }

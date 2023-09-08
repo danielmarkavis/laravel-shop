@@ -2,45 +2,56 @@
 
 namespace App\Services;
 
-use App\Contracts\CartInterface;
-use App\Models\Variant;
+use App\Contracts\OrderInterface;
+use App\Contracts\PaymentServiceInterface;
+use App\Models\Address;
+use App\Models\Order;
+use App\Models\OrderProduct;
+use Illuminate\Support\Str;
 
-class OrderService implements CartInterface
+class OrderService implements OrderInterface
 {
-    /**
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
-     */
-    public function get()
+    public function get(int $order_id)
     {
-        return ;
+        return Order::find($order_id);
     }
 
-    /**
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
-     */
-    public function store(): void
+    public function store(CartService $cart, Address $address): Order
     {
-        $cart = session()->get('cart', []);
-        $sku = $variant->sku;
-        $product = $variant->product;
+        $orderSession = session()->get('order', []);
 
-        if(isset($cart[$sku])) {
-            $cart[$sku]['quantity']++;
+        if(isset($orderSession['uuid'])) {
+            $order = Order::where('uuid', $orderSession['uuid'])->first();
         } else {
-            $cart[$sku] = [
-                "name" => $product->name,
-                "sku" => $variant->sku,
-                "quantity" => 1,
-                "price" => $variant->price,
-                "colour" => $variant->colour,
-                "size" => $variant->size,
-                "image" => $variant->image->url
-            ];
+            $orderSession['uuid'] = Str::uuid()->toString();
+
+            $totalPrice = $cart->totalPrice();
+            $subtotal = ($totalPrice/120)*100;
+            $vat = $totalPrice - (($totalPrice/120)*100);
+
+            $order = new Order();
+            $order->uuid = $orderSession['uuid'];
+            $order->subtotal = $subtotal;
+            $order->vat = $vat;
+            $order->total = $totalPrice;
+            $order->status = PaymentServiceInterface::PAYMENT_PENDING;
+            $order->shipping_address_id = $address->id;
+            $order->user_id = auth()->user()->id;
+            $order->save();
+
+            foreach ($cart->get() as $variant) {
+                $orderProduct = new OrderProduct();
+                $orderProduct->order_id = $order->id;
+                $orderProduct->variant_id = $variant['id'];
+                $orderProduct->quantity = $variant['quantity'];
+                $orderProduct->price = $variant['price'];
+                $orderProduct->save();
+            }
         }
 
-        session()->put('cart', $cart);
+        session()->put('order', $orderSession);
+
+        return $order;
     }
 
     /**
@@ -58,20 +69,28 @@ class OrderService implements CartInterface
         session()->put('cart', $cart);
     }
 
-    public function totalPrice(): int
+    public function getSessionOrder()
     {
-        $total = 0;
-
-        $cart = session()->get('cart', []);
-        if (!count($cart)) {
-            return $total;
+        $orderUUID = $this->getOrderUUID();
+        if ($orderUUID === null) {
+            return null;
         }
 
-        foreach ($cart as $details) {
-            $total = $total + ($details['price'] * $details['quantity']);
-        }
+        return Order::where('uuid', $orderUUID)->first();
+    }
 
-        return $total;
+
+    public function getOrderUUID()
+    {
+        $orderSession = session()->get('order', []);
+
+        return $orderSession['uuid'] ?? null;
+    }
+
+    public function updateStatus(string $status)
+    {
+        $this->status = $status;
+        $this->save();
     }
 
 }
