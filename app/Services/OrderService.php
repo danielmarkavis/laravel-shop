@@ -13,14 +13,14 @@ class OrderService implements CartInterface
      */
     public function get()
     {
-        return session()->get('cart', []);
+        return ;
     }
 
     /**
      * @throws \Psr\Container\ContainerExceptionInterface
      * @throws \Psr\Container\NotFoundExceptionInterface
      */
-    public function store(Variant $variant): void
+    public function store(): void
     {
         $cart = session()->get('cart', []);
         $sku = $variant->sku;

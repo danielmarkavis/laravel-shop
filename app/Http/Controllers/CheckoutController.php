@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CheckoutStoreRequest;
+use App\Models\Address;
+use App\Services\AddressService;
 use App\Services\CartService;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -18,17 +20,22 @@ class CheckoutController extends Controller
         $products = $cart->get();
         $total = $cart->totalPrice();
 
-        return view('pages.checkout.index', compact('products','total'));
+        $addresses = Address::where('user_id', auth()->user()->id)->get();
+
+        return view('pages.checkout.index', compact('products','total', 'addresses'));
     }
 
-    public function store(CheckoutStoreRequest $request, CartService $cart): View|Application|Factory|\Illuminate\Contracts\Foundation\Application
+    public function store(CheckoutStoreRequest $request, AddressService $address, CartService $cart): View|Application|Factory|\Illuminate\Contracts\Foundation\Application
     {
         $data = $request->validated();
+
+        dd($data);
+
+        $address->store($data);
 
         $products = $cart->get();
         $total = $cart->totalPrice();
 
-        $validated = $request->validated();
         return view('pages.payment.index', compact('products','total'));
     }
 
