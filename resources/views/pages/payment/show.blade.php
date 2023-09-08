@@ -46,7 +46,7 @@
                 <div>
                     <div class="grid grid-cols-3 gap-2">
                         @foreach($orderComplete->products as $id => $details)
-                            {{$details}}
+                            {{$details->variant}}
                             <img src="{{ $details['image'] }}" alt="image" class="h-48"/>
 
                             <div class="flex flex-col">

@@ -22,16 +22,21 @@ class PaymentController extends Controller
         return view('pages.payment.index', compact('products','total'));
     }
 
-    public function store(CartService $cart, PaymentServiceInterface $paymentGateway, OrderService $orderService): View|Application|Factory
+    public function store(CartService $cart, PaymentServiceInterface $paymentGateway, OrderService $orderService): \Illuminate\Http\RedirectResponse
     {
         $status = $paymentGateway->execute();
 
         $orderComplete = $orderService->getSessionOrder();
 
-        $cart->purge();
+        if (!$orderComplete) {
+            return redirect()->route('products.index');
+        }
 
         $orderComplete->status = $status;
         $orderComplete->save();
+
+        $cart->purge();
+        $orderService->purgeSession();
 
         return view('pages.payment.show', compact('orderComplete'));
     }

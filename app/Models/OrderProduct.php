@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class OrderProduct extends Model
 {
@@ -17,4 +19,12 @@ class OrderProduct extends Model
         'product_quantity',
         'price',
     ];
+
+    public function variant(): HasOne
+    {
+        return $this
+            ->HasOne(Variant::class, 'id' ,'product_id')
+            ->with('media');
+    }
+
 }

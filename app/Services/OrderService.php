@@ -87,10 +87,9 @@ class OrderService implements OrderInterface
         return $orderSession['uuid'] ?? null;
     }
 
-    public function updateStatus(string $status)
+    public function purgeSession(): void
     {
-        $this->status = $status;
-        $this->save();
+        session()->put('order', []);
     }
 
 }

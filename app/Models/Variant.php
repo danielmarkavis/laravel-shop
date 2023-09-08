@@ -40,8 +40,7 @@ class Variant extends Model implements HasMedia
     public function registerMediaConversions(Media $media = null): void
     {
         $this
-            ->addMediaConversion('variant_thumbnail')
-            ->width(250);
+            ->addMediaConversion('variant_thumbnail');
     }
 
     public function getProductSkuAttribute(): Collection
