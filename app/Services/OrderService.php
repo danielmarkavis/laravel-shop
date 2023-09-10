@@ -18,7 +18,7 @@ class OrderService implements OrderInterface
 
     public function all(): \Illuminate\Database\Eloquent\Collection
     {
-        return Order::all();
+        return Order::get();
     }
 
     public function store(CartService $cart, Address $address): Order

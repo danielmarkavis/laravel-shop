@@ -28,7 +28,6 @@ class AccountController extends Controller
      */
     public function show(Order $order, Request $request): View|\Illuminate\Foundation\Application|Factory|Application
     {
-        dd($order);
         return view('pages.account.show', compact('order'));
     }
 
