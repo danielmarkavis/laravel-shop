@@ -46,13 +46,13 @@
                 <div>
                     <div class="grid grid-cols-3 gap-2">
                         @foreach($order->products as $id => $details)
-                            <img src="{{ $details->variant->image->url}}" alt="image" class="h-48"/>
+                            <img src="{{ $details->variant->image->url}}" alt="image" class="h-32"/>
 
                             <div class="flex flex-col">
-                                <p class="text-md uppercase">{{ $details['name'] }}</p>
-                                <p class="">Sku: <span class="uppercase text-gray-500">{{ $details['sku'] }}</span></p>
-                                <p class="">Colour: <span class="uppercase text-gray-500">{{ $details['colour'] }}</span></p>
-                                <p class="">Size: <span class="uppercase text-gray-500">{{ $details['size'] }}</span></p>
+                                <p class="text-md uppercase">{{ $details->variant->product->name }}</p>
+                                <p class="">Sku: <span class="uppercase text-gray-500">{{ $details->variant->sku }}</span></p>
+                                <p class="">Colour: <span class="uppercase text-gray-500">{{ $details->variant->colour }}</span></p>
+                                <p class="">Size: <span class="uppercase text-gray-500">{{ $details->variant->size }}</span></p>
 
                                 <div class="text-xl my-2"> Qty: {{ $details['quantity'] }}</div>
                             </div>

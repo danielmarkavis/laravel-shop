@@ -39,10 +39,11 @@ class PaymentController extends Controller
         $cart->purge();
         $orderService->purgeSession();
 
-        return redirect()->route('payment-complete.success', ['uuid'=> $orderComplete->uuid]);//view('pages.payment.show', compact('orderComplete'));
+        return redirect()->route('payment.show', ['order'=> $orderComplete->uuid]);
     }
 
     public function show(Order $order) {
+//        dd($order);
         return view('pages.payment.show', compact('order'));
     }
 }

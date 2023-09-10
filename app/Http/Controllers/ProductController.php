@@ -9,6 +9,7 @@ use Illuminate\Contracts\View\View;
 
 class ProductController extends Controller
 {
+
     /**
      * Display a listing of the resource.
      */
@@ -26,4 +27,5 @@ class ProductController extends Controller
     {
         return view('pages.products.show', compact('product'));
     }
+
 }
