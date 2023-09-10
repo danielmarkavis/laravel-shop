@@ -16,6 +16,7 @@
                             <th scope="col" class="px-6 py-3">#</th>
                             <th scope="col" class="px-6 py-3">Quantity</th>
                             <th scope="col" class="px-6 py-3">Total</th>
+                            <th scope="col" class="px-6 py-3">Status</th>
                             <th></th>
                         </tr>
                         </thead>
@@ -23,10 +24,15 @@
                         @foreach($orders as $order)
                             <tr class="bg-white border-b">
                                 <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-                                    <a href="{{route('orders.show', ['order' => $order->uuid])}}">{{$order->uuid}}</a>
+                                    @if($order->status !== 'pending')
+                                        <a href="{{route('orders.show', ['order' => $order->uuid])}}">{{$order->uuid}}</a>
+                                    @else
+                                        <a href="{{route('cart.index')}}">{{$order->uuid}}</a>
+                                    @endif
                                 </th>
                                 <td class="px-6 py-4">{{count($order->products)}}</td>
                                 <td class="px-6 py-4">&pound;{{$order->total}}</td>
+                                <td class="px-6 py-4">{{$order->status}}</td>
                             </tr>
                         @endforeach
                         </tbody>
