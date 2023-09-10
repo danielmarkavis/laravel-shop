@@ -16,6 +16,11 @@ class OrderService implements OrderInterface
         return Order::find($order_id);
     }
 
+    public function all(): \Illuminate\Database\Eloquent\Collection
+    {
+        return Order::all();
+    }
+
     public function store(CartService $cart, Address $address): Order
     {
         $orderSession = session()->get('order', []);

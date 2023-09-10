@@ -2,14 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Contracts\CartInterface;
 use App\Models\Order;
+use App\Models\Variant;
+use App\Services\CartService;
 use App\Services\OrderService;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Request;
 
-class OrderController extends Controller
+class AccountController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -17,7 +20,7 @@ class OrderController extends Controller
     public function index(OrderService $orderService): View|\Illuminate\Foundation\Application|Factory|Application
     {
         $orders = $orderService->all();
-        return view('pages.orders.index', compact('orders'));
+        return view('pages.account.index', compact('orders'));
     }
 
     /**
@@ -25,11 +28,8 @@ class OrderController extends Controller
      */
     public function show(Order $order, Request $request): View|\Illuminate\Foundation\Application|Factory|Application
     {
-//        dd($order->products[0]->variant->image);
-//        $orderWithProducts = $order->with(['products'])->get();
-//        dd($orderWithProducts);
-
-        return view('pages.orders.show', compact('order'));
+        dd($order);
+        return view('pages.account.show', compact('order'));
     }
 
 }

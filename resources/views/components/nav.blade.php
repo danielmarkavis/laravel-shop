@@ -18,7 +18,6 @@
                 <li>
                     @if (Route::has('login'))
                         @auth
-                            {{--                            <a href="{{ url('/account') }}" class="font-semibold text-gray-200 hover:text-gray-400">Account</a>--}}
                             <div class="hidden sm:flex sm:items-center">
                                 <x-dropdown align="right" width="48">
                                     <x-slot name="trigger">
@@ -36,6 +35,10 @@
                                     <x-slot name="content">
                                         <x-dropdown-link :href="route('profile.edit')">
                                             {{ __('Profile') }}
+                                        </x-dropdown-link>
+
+                                        <x-dropdown-link :href="route('orders.index')">
+                                            {{ __('Orders') }}
                                         </x-dropdown-link>
 
                                         <!-- Authentication -->

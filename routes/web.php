@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\AccountController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -28,21 +30,19 @@ Route::group([
     Route::resource('checkout', CheckoutController::class)
         ->only(['index', 'store']);
 
-//    Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
-
     Route::resource('payment', PaymentController::class)
         ->only(['index', 'store']);
-//    Route::get('/payment', [PaymentController::class, 'index'])->name('payment.index');
 
+    Route::resource('account', AccountController::class)
+        ->only(['index']);
+
+    Route::resource('orders', OrderController::class)
+        ->parameters(['orders' => 'order:uuid'])->only(['index', 'show']);
 });
 
 //Route::middleware(['auth'])->get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
 //Route::middleware(['auth'])->get('/payment', [PaymentController::class, 'index'])->name('payment.index');
 
-
-Route::get('/account', function () {
-    return view('pages.account.index');
-})->middleware(['auth', 'verified'])->name('account');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

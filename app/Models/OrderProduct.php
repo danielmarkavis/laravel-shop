@@ -23,8 +23,7 @@ class OrderProduct extends Model
     public function variant(): HasOne
     {
         return $this
-            ->HasOne(Variant::class, 'id' ,'product_id')
-            ->with('media');
+            ->HasOne(Variant::class, 'id' ,'variant_id');
     }
 
 }
