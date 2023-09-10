@@ -25,10 +25,6 @@ class OrderController extends Controller
      */
     public function show(Order $order, Request $request): View|\Illuminate\Foundation\Application|Factory|Application
     {
-//        dd($order->products[0]->variant->image);
-//        $orderWithProducts = $order->with(['products'])->get();
-//        dd($orderWithProducts);
-
         return view('pages.orders.show', compact('order'));
     }
 

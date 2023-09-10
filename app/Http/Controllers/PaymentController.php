@@ -43,7 +43,6 @@ class PaymentController extends Controller
     }
 
     public function show(Order $order) {
-//        dd($order);
         return view('pages.payment.show', compact('order'));
     }
 }
