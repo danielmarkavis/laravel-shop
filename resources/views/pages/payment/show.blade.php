@@ -10,7 +10,7 @@
         </div>
 
         <div class="text-center">
-            <h2 class="text-xl">Your order {id} is complete</h2>
+            <h2 class="text-xl">Your order <span class="text-gray-500">{{$order->uuid}}</span> is complete</h2>
         </div>
 
         <div class="grid grid-cols-1 gap-2">
@@ -21,7 +21,7 @@
                         Sub-Total
                     </div>
                     <div class="text-lg">
-                        &pound;{{number_format($orderComplete->subtotal, 2)}}
+                        &pound;{{number_format($order->subtotal, 2)}}
                     </div>
                 </div>
                 <div class="flex flex-row justify-between">
@@ -29,7 +29,7 @@
                         VAT
                     </div>
                     <div class="text-lg">
-                        &pound;{{number_format($orderComplete->vat, 2)}}
+                        &pound;{{number_format($order->vat, 2)}}
                     </div>
                 </div>
                 <div class="flex flex-row justify-between font-bold">
@@ -37,7 +37,7 @@
                         Total
                     </div>
                     <div class="text-xl">
-                        &pound;{{number_format($orderComplete->total, 2)}}
+                        &pound;{{number_format($order->total, 2)}}
                     </div>
                 </div>
 
@@ -45,9 +45,8 @@
 
                 <div>
                     <div class="grid grid-cols-3 gap-2">
-                        @foreach($orderComplete->products as $id => $details)
-                            {{$details->variant}}
-                            <img src="{{ $details['image'] }}" alt="image" class="h-48"/>
+                        @foreach($order->products as $id => $details)
+                            <img src="{{ $details->variant->image->url}}" alt="image" class="h-48"/>
 
                             <div class="flex flex-col">
                                 <p class="text-md uppercase">{{ $details['name'] }}</p>
@@ -69,14 +68,14 @@
                     <h2 class="text-xl font-bold">Shipping:</h2>
                     <ul>
                         <li>
-                            <div class="text-bold">{{$orderComplete->address->first_name}} {{$orderComplete->address->last_name}}</div>
+                            <div class="text-bold">{{$order->address->first_name}} {{$order->address->last_name}}</div>
                         </li>
                         <li>
-                            {{$orderComplete->address->street_address_1}},
-                            {{$orderComplete->address->street_address_2 ? $orderComplete->address->street_address_2.',' : ''}}
-                            {{$orderComplete->address->town}},
-                            {{$orderComplete->address->postcode}}</li>
-                        <li>{{$orderComplete->address->country}}</li>
+                            {{$order->address->street_address_1}},
+                            {{$order->address->street_address_2 ? $order->address->street_address_2.',' : ''}}
+                            {{$order->address->town}},
+                            {{$order->address->postcode}}</li>
+                        <li>{{$order->address->country}}</li>
                     </ul>
                 </div>
             </div>

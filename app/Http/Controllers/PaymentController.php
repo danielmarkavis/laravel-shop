@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Contracts\PaymentServiceInterface;
+use App\Models\Order;
 use App\Services\CartService;
 use App\Services\OrderService;
 use Illuminate\Contracts\Foundation\Application;
@@ -29,7 +30,7 @@ class PaymentController extends Controller
         $orderComplete = $orderService->getSessionOrder();
 
         if (!$orderComplete) {
-            return redirect()->route('products.index');
+            return redirect()->route('orders.index');
         }
 
         $orderComplete->status = $status;
@@ -38,7 +39,10 @@ class PaymentController extends Controller
         $cart->purge();
         $orderService->purgeSession();
 
-        return view('pages.payment.show', compact('orderComplete'));
+        return redirect()->route('payment-complete.success', ['uuid'=> $orderComplete->uuid]);//view('pages.payment.show', compact('orderComplete'));
     }
 
+    public function show(Order $order) {
+        return view('pages.payment.show', compact('order'));
+    }
 }

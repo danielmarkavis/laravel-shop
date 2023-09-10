@@ -138,7 +138,7 @@
                             Sub-Total
                         </div>
                         <div class="text-lg">
-                            &pound;{{number_format($total, 2)}}
+                            &pound;{{number_format(($total/120)*100, 2)}}
                         </div>
                     </div>
                     <div class="flex flex-row justify-between">

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\PaymentCompleteController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -31,7 +32,7 @@ Route::group([
         ->only(['index', 'store']);
 
     Route::resource('payment', PaymentController::class)
-        ->only(['index', 'store']);
+        ->parameters(['payment' => 'order:uuid'])->only(['index', 'store', 'show']);
 
     Route::resource('account', AccountController::class)
         ->only(['index']);
@@ -39,9 +40,6 @@ Route::group([
     Route::resource('orders', OrderController::class)
         ->parameters(['orders' => 'order:uuid'])->only(['index', 'show']);
 });
-
-//Route::middleware(['auth'])->get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
-//Route::middleware(['auth'])->get('/payment', [PaymentController::class, 'index'])->name('payment.index');
 
 
 Route::middleware('auth')->group(function () {
