@@ -1,8 +1,9 @@
 <x-guest-layout>
-    <div class="container mx-auto">
+    <div class="container mx-auto" x-data="{selected: null }">
         <div class="grid grid-cols-2 gap-2">
             <div>
-                <img src="{{$product->image->url}}" alt="image"/>
+                <img :src="selected ? selected.image : '{{$product->variants[0]->image->url}}'" alt="image"/>
+                Selected: <span x-text="selected.sku" />
             </div>
 
             <div class="flex flex-col justify-center">
@@ -12,17 +13,20 @@
                     {!! json_decode($product->description) !!}
                 </div>
                 <hr class="pb-5">
-                <div class="flex flex-row gap-2 pb-5">
+                <div class="flex flex-row flex-wrap gap-2 pb-5">
                     @foreach($product->variants as $variant)
-                        <div class="{{$variant->background}} h-5 w-5 rounded-full" title="{{$variant->colour}}">&nbsp;</div>
+                        <div title="{{$variant->colour}} ({{$variant->sku}})" @click="selected = {'sku':'{{$variant->sku}}','image':'{{$variant->image->url}}'}">
+                            <img src="{{$variant->image->url}}" alt="image" class="h-32"/>
+                        </div>
                     @endforeach
                 </div>
                 <div class="options">
-                    <a
-                        href="{{ route('add.to.cart', $variant->sku) }}"
-                        class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 focus:outline-none"
-                        role="button">Add to cart
-                    </a>
+                    <button
+                            x-bind:disabled="!selected"
+                            @click="location.href = '/add-to-cart/'+selected.sku"
+                            class="text-white bg-blue-700 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 focus:outline-none disabled:opacity-25"
+                            role="button">Add to cart
+                    </button>
                 </div>
             </div>
         </div>
