@@ -7,6 +7,7 @@ use App\Contracts\PaymentServiceInterface;
 use App\Models\Address;
 use App\Models\Order;
 use App\Models\OrderProduct;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Str;
 
 class OrderService implements OrderInterface
@@ -16,9 +17,9 @@ class OrderService implements OrderInterface
         return Order::find($order_id);
     }
 
-    public function all(): \Illuminate\Database\Eloquent\Collection
+    public function all(): Collection
     {
-        return Order::get();
+        return Order::where('user_id', auth()->user()->id)->get();
     }
 
     public function store(CartService $cart, Address $address): Order
