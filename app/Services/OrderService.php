@@ -19,7 +19,7 @@ class OrderService implements OrderInterface
 
     public function all(): Collection
     {
-        return Order::where('user_id', auth()->user()->id)->get();
+        return Order::whereAuthed()->get();
     }
 
     public function store(CartService $cart, Address $address): Order
